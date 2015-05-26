@@ -54,8 +54,6 @@ WCSimEventAction::WCSimEventAction(WCSimRunAction* myRun,
   WCSimWCDigitizer* WCDM = new WCSimWCDigitizer( "WCReadout", myDetector);
   DMman->AddNewModule(WCDMPMT);
   DMman->AddNewModule(WCDM);
-
-  randGen = new TRandom3();
 }
 
 WCSimEventAction::~WCSimEventAction(){}
