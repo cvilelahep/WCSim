@@ -54,6 +54,8 @@ WCSimEventAction::WCSimEventAction(WCSimRunAction* myRun,
   WCSimWCDigitizer* WCDM = new WCSimWCDigitizer( "WCReadout", myDetector);
   DMman->AddNewModule(WCDMPMT);
   DMman->AddNewModule(WCDM);
+
+  randGen = new TRandom3();
 }
 
 WCSimEventAction::~WCSimEventAction(){}
@@ -83,7 +85,12 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
 
   G4int n_trajectories = 0;
   if (trajectoryContainer) n_trajectories = trajectoryContainer->entries();
-  
+
+  if(generatorAction->GetIsRooTrackerFileFinished()){
+      GetRunAction()->EndOfRunAction(GetRunAction()->GetG4Run());
+      exit(0);
+  }
+
   // ----------------------------------------------------------------------
   //  Get Event Information
   // ----------------------------------------------------------------------
@@ -114,7 +121,6 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
   // If this option is chosen
   // pe's will be generated on the pmts.
   if( generatorAction->IsUsingPoissonPMT() ){
-    
     // Loop through PMTs in detector
     for (
 	 std::vector<WCSimPmtInfo*>::iterator pmtIt = detectorConstructor->Get_Pmts()->begin();
@@ -130,6 +136,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
       bool hitExists = false;
       int hitIndex = -1;
       for (int existingHit = 0; existingHit < WCHC->GetSize(); existingHit++){
+
 	if( (*WCHC)[existingHit]->GetTubeID() == (*pmtIt)->Get_tubeid() ){
 	    
 	  hitExists = true;
@@ -147,6 +154,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
 	}
 	if (hitExists) break;
       }
+
             
       if (! hitExists){
 	WCHC->insert((WCSimWCHit*) new WCSimWCHit() );
@@ -158,7 +166,6 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
       (*WCHC)[hitIndex]->SetEdep(0.);
       (*WCHC)[hitIndex]->SetPos(detectorConstructor->GetTubeTransform((*pmtIt)->Get_tubeid()).getTranslation());
       (*WCHC)[hitIndex]->SetRot(detectorConstructor->GetTubeTransform((*pmtIt)->Get_tubeid()).getRotation());
-					          
       // Ignore logical volume for now...
       for (int pe = 0; pe < nPoisson; pe++) {
 	(*WCHC)[hitIndex]->AddPe(G4RandGauss::shoot(0.0,10.));
@@ -349,14 +356,12 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
    // G4cout << "FGDyHC: " << &FGDyHC << G4endl;
    // G4cout << "MRDxHC: " << &MRDxHC << G4endl;
    // G4cout << "MRDyHC: " << &MRDyHC << G4endl;
-   
 
   FillRootEvent(event_id,
 		jhfNtuple,
 		trajectoryContainer,
 		WCHC,
 		WCDC);
-
 }
 
 G4int WCSimEventAction::WCSimEventFindStartingVolume(G4ThreeVector vtx)
@@ -806,6 +811,15 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
   
   TTree* tree = GetRunAction()->GetTree();
   tree->Fill();
+
+  // Check we are supposed to be saving the NEUT vertex and that the generator was given a NEUT vector file to process
+  // If there is no NEUT vector file an empty NEUT vertex will be written to the output file
+  if(GetRunAction()->GetSaveRooTracker() && generatorAction->IsUsingRootrackerEvtGenerator()){
+      GetRunAction()->ClearRootrackerVertexArray();
+      generatorAction->CopyRootrackerVertex(GetRunAction()->GetRootrackerVertex());
+      GetRunAction()->FillRootrackerVertexTree();
+  }
+
   TFile* hfile = tree->GetCurrentFile();
   // MF : overwrite the trees -- otherwise we have as many copies of the tree
   // as we have events. All the intermediate copies are incomplete, only the
@@ -816,3 +830,4 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
   wcsimrootsuperevent->ReInitialize();
   
 }
+
