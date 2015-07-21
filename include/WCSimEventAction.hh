@@ -12,8 +12,6 @@
 #include "WCSimWCHit.hh"
 #include "WCSimWCDigi.hh"
 
-#include "TRandom3.h"
-
 class WCSimRunAction;
 class WCSimPrimaryGeneratorAction;
 class G4Event;
