@@ -143,7 +143,6 @@ class WCSimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   
         inline void SetPoissonPMTMean(G4double val){ poissonPMTMean = val; }
         inline G4double GetPoissonPMTMean(){ return poissonPMTMean; }
-
 };
 
 #endif

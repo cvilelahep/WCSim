@@ -54,6 +54,8 @@ WCSimEventAction::WCSimEventAction(WCSimRunAction* myRun,
   WCSimWCDigitizer* WCDM = new WCSimWCDigitizer( "WCReadout", myDetector);
   DMman->AddNewModule(WCDMPMT);
   DMman->AddNewModule(WCDM);
+
+  randGen = new TRandom3();
 }
 
 WCSimEventAction::~WCSimEventAction(){}
@@ -124,6 +126,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
 	 std::vector<WCSimPmtInfo*>::iterator pmtIt = detectorConstructor->Get_Pmts()->begin();
 	 pmtIt != detectorConstructor->Get_Pmts()->end();
 	 pmtIt++ ){
+
             
       // Generate number of PEs acording to Poisson with macro defined mean
       //      int nPoisson = randGen->Poisson(generatorAction->GetPoissonPMTMean());
@@ -152,7 +155,6 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
 	}
 	if (hitExists) break;
       }
-
             
       if (! hitExists){
 	WCHC->insert((WCSimWCHit*) new WCSimWCHit() );
@@ -164,6 +166,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
       (*WCHC)[hitIndex]->SetEdep(0.);
       (*WCHC)[hitIndex]->SetPos(detectorConstructor->GetTubeTransform((*pmtIt)->Get_tubeid()).getTranslation());
       (*WCHC)[hitIndex]->SetRot(detectorConstructor->GetTubeTransform((*pmtIt)->Get_tubeid()).getRotation());
+
       // Ignore logical volume for now...
       for (int pe = 0; pe < nPoisson; pe++) {
 	(*WCHC)[hitIndex]->AddPe(G4RandGauss::shoot(0.0,10.));

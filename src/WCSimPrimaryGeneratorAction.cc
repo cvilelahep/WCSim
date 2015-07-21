@@ -97,8 +97,7 @@ WCSimPrimaryGeneratorAction::~WCSimPrimaryGeneratorAction()
 void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-
-    // If using the poissonPMT method of artificially generating PE's on the PMT's, skip all primary particle generation
+  // If using the poissonPMT method of artificially generating PE's on the PMT's, skip all primary particle generation
     if ( usePoissonPMT ) return;
 
     // We will need a particle table
@@ -456,6 +455,7 @@ void WCSimPrimaryGeneratorAction::OpenRootrackerFile(G4String fileName)
     fSettingsTree->SetBranchAddress("NuIdfdPos",fNuPlanePos);
 
 }
+
 
 void WCSimPrimaryGeneratorAction::SetupBranchAddresses(NRooTrackerVtx* nrootrackervtx){
 

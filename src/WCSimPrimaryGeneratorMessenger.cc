@@ -29,11 +29,11 @@ WCSimPrimaryGeneratorMessenger::WCSimPrimaryGeneratorMessenger(WCSimPrimaryGener
   fileNameCmd->SetParameterName("fileName",true);
   fileNameCmd->SetDefaultValue("inputvectorfile");
 
-
   genSet = false;
   //C. Vilela: Adding PMTPoisson for generating photoelectrons directly on PMTs according to a Poisson distribution.
   poisCmd = new G4UIcmdWithABool("/mygen/pmtPoisson",this);
   poisCmd->SetGuidance("Flag for generating photoelectrons directly on PMTs according to a Poisson distribution. If this flag is set to true no primary particles will be generated. Dark noise will still be generated, so for a pure Poisson distribution set the dark rate to 0 Hz.");
+
   poisCmd->SetGuidance("Set poisson mean with /mygen/poissonMean");
   poisCmd->SetParameterName("pmtPoisson", true);
 
@@ -105,8 +105,8 @@ void WCSimPrimaryGeneratorMessenger::SetNewValue(G4UIcommand * command,G4String 
     {
       if ( poisCmd->GetNewBoolValue(newValue) ){
 	myAction->SetPoissonPMT(true);
-
 	G4cout << "Running with PoissonPMT flag. Photoelectrons will be generated directly on the PMTs according to a Poisson distribuition. Primary particle generation will be turned off !!!" << G4endl;
+
       }
       else myAction->SetPoissonPMT(false);
     }

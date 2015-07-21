@@ -130,6 +130,7 @@ void WCSimRunAction::BeginOfRunAction(const G4Run* aRun)
   }
 
   FillGeoTree();
+
   initscattable();
 }
 
@@ -147,11 +148,11 @@ void WCSimRunAction::EndOfRunAction(const G4Run*)
 //  G4cout << (float(numberOfTimesCatcherHit)/float(numberOfEventsGenerated))*100.
 //        << "% through-going (hit Catcher)" << G4endl;
 
-
   writescattable();
 
   // Close the Root file at the end of the run
 
+  // Close the Root file at the end of the run
   TFile* hfile = WCSimTree->GetCurrentFile();
   hfile->Close();
 
