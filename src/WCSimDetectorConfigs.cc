@@ -324,11 +324,14 @@ void WCSimDetectorConstruction::MatchWCSimAndHyperK()
 
 void WCSimDetectorConstruction::SetNuPrismGeometry(G4String PMTType, G4double PMTCoverage, G4double detectorHeight, G4double detectorDiameter, G4double verticalPosition)
 {
-    WCSimPMTObject * PMT = CreatePMTObject(PMTType);
+  WCDetectorName = "NuPRISM";
+  WCIDCollectionName = WCDetectorName +"-glassFaceWCPMT";
+  WCSimPMTObject * PMT = CreatePMTObject(PMTType, WCIDCollectionName);
+    
     WCPMTName = PMT->GetPMTName();
     WCPMTExposeHeight = PMT->GetExposeHeight();
     WCPMTRadius = PMT->GetRadius();
-    WCPMTGlassThickness = PMT->GetPMTGlassThickness();
+	//    WCPMTGlassThickness = PMT->GetPMTGlassThickness();
 
     WCIDHeight               = detectorHeight;
     WCIDDiameter             = detectorDiameter;
