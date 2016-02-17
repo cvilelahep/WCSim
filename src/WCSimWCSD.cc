@@ -162,7 +162,7 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     
     // this pmt was hit so save pmtnumber for this photon in photon information singleton
     WCSimOpticalPhotonTrackInfo* opphotonInfo = WCSimOpticalPhotonTrackInfo::instance();
-    if(opphotonInfo->isEnabled()){
+    if(opphotonInfo->isEnabled() or opphotonInfo->getKillDirect()){
       int tridx = opphotonInfo->IdExists( aStep->GetTrack()->GetTrackID() );
       
       if (tridx < 0 ){ 
@@ -239,7 +239,15 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
        const G4Event* currentEvent = Runman->GetCurrentEvent();
        G4HCofThisEvent* HCofEvent = currentEvent->GetHCofThisEvent();
        hitsCollection = (WCSimWCHitsCollection*)(HCofEvent->GetHC(collectionID));
-      
+
+       // If KillDirect is enabled do not produce hits if optical photon hasn't scattered
+
+       if ( opphotonInfo->getKillDirect() ){
+	 int tridx = opphotonInfo->IdExists( aStep->GetTrack()->GetTrackID() );
+	 //                                          Should return value be true or false?
+	 if ( opphotonInfo->getIstory()[tridx] == 0) return false;
+       }
+
        // If this tube hasn't been hit add it to the collection
        if (PMTHitMap[replicaNumber] == 0)
 	 {
@@ -269,7 +277,7 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 	 
        }
      }
-  }
+   }
 
   return true;
 }

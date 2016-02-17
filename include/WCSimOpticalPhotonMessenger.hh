@@ -25,6 +25,7 @@ private:
   G4UIdirectory* opInfoDir;
   G4UIcmdWithABool* opEnabled;
   G4UIcmdWithABool* opKillScatterRef;
+  G4UIcmdWithABool* opKillDirect;
 };
 
 #endif

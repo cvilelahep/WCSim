@@ -18,12 +18,20 @@ WCSimOpticalPhotonMessenger::WCSimOpticalPhotonMessenger(WCSimOpticalPhotonTrack
   opKillScatterRef->SetParameterName("opKillScatterRef", true);
   opKillScatterRef->SetDefaultValue(false);
   opKillScatterRef->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+  opKillDirect = new G4UIcmdWithABool("/opInfo/KillDirect", this);
+  opKillDirect->SetGuidance("Kill any Optical Photon that is about to make a hit without having previously scattered or reflected.");
+  opKillDirect->SetParameterName("opKillDirect", true);
+  opKillDirect->SetDefaultValue(false);
+  opKillDirect->AvailableForStates(G4State_PreInit, G4State_Idle);
+
 }
 
 WCSimOpticalPhotonMessenger::~WCSimOpticalPhotonMessenger(){
   delete opInfoDir;
   delete opEnabled;
   delete opKillScatterRef;
+  delete opKillDirect;
 }
 
 void WCSimOpticalPhotonMessenger::SetNewValue(G4UIcommand* command,G4String newValue){
@@ -42,6 +50,12 @@ void WCSimOpticalPhotonMessenger::SetNewValue(G4UIcommand* command,G4String newV
     bool value = opKillScatterRef->GetNewBoolValue(newValue);
     std::cout << "Kill Optical Photon on Scatter/Reflect Value is " << value << ". New value is " << newValue << std::endl; 
     opInfo->setKillScatRef( value );
+  }
+
+  if(command == opKillDirect){
+    bool value = opKillDirect->GetNewBoolValue(newValue);
+    std::cout << "Kill Direct Optical Photon Value is " << value << ". New value is " << newValue << std::endl; 
+    opInfo->setKillDirect( value );
   }
 
 }

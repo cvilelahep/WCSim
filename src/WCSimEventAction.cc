@@ -59,9 +59,9 @@ WCSimEventAction::WCSimEventAction(WCSimRunAction* myRun,
 WCSimEventAction::~WCSimEventAction(){}
 
 void WCSimEventAction::BeginOfEventAction(const G4Event*){
-     if(WCSimOpticalPhotonTrackInfo::instance()->isEnabled()) 
+  if(WCSimOpticalPhotonTrackInfo::instance()->isEnabled() or WCSimOpticalPhotonTrackInfo::instance()->getKillDirect()) 
     WCSimOpticalPhotonTrackInfo::instance()->reset();
-
+  
 }
 
 void WCSimEventAction::EndOfEventAction(const G4Event* evt)

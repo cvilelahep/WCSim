@@ -49,7 +49,7 @@ void WCSimOpticalPhotonTrackInfo::UserSteppingAction(const G4Step* aStep)
   WCSimOpticalPhotonTrackInfo* trackInfo = WCSimOpticalPhotonTrackInfo::instance();
   
   const G4Track* track       = aStep->GetTrack();
-  if(isEnabled()){
+  if( isEnabled() or getKillDirect() ){
     if ( track->GetCurrentStepNumber() == 1 ){
       
       // std::cout<<"SteppingAction trackid="<<track->GetTrackID()
@@ -106,7 +106,7 @@ void WCSimOpticalPhotonTrackInfo::UserSteppingAction(const G4Step* aStep)
   if ( track->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
     // get index of this track in trackInfo
     int tridx = trackInfo->IdExists( track->GetTrackID() );
-    if (tridx < 0 && isEnabled() ){ 
+    if (tridx < 0 && ( isEnabled() or getKillDirect() ) ){ 
       std::cout<<"Warning tridx<0, SteppingAction trackid="<<track->GetTrackID()
 	       <<" step "<<  track->GetCurrentStepNumber()
 	       <<" particledef= "<<track->GetParticleDefinition()->GetParticleName()
@@ -169,7 +169,7 @@ void WCSimOpticalPhotonTrackInfo::UserSteppingAction(const G4Step* aStep)
     }
 
 
-    if(isEnabled()){
+    if(isEnabled() or getKillDirect()){
       if ( thePostPoint->GetProcessDefinedStep()->GetProcessName() == "OpRayleigh"){
         trackInfo->incScatters( tridx );
       }

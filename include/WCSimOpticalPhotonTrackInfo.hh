@@ -42,9 +42,11 @@ private:
     
     bool enabled; // enable saving extra optical photon info
     bool killscatref; // kill optical photons that scatter or reflect
+    bool killdirect; // kill optical photons that scatter or reflect
     
     WCSimOpticalPhotonTrackInfo(){ enabled = false; 
                                    killscatref = false;
+				   killdirect = false;
                                    messenger = new WCSimOpticalPhotonMessenger(this);
                                    std::cout << "Constructed" << std::endl;}
     WCSimOpticalPhotonMessenger* messenger;
@@ -58,6 +60,8 @@ private:
     void enable(){ enabled = true; }
     void disable(){ enabled = false; }
     void setKillScatRef( bool aval ){ killscatref = aval; }
+    void setKillDirect ( bool aval ){ killdirect = aval; }
+    bool getKillDirect (){ return killdirect; }
     bool isEnabled(){ return enabled; }
     
     void UserSteppingAction( const G4Step * aStep );
