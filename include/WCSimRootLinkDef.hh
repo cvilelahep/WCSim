@@ -4,6 +4,9 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ enum  TriggerType_t;
+#pragma link C++ enum  DigitizerType_t;
+
 #pragma link C++ class WCSimRootCherenkovDigiHit+;
 #pragma link C++ class WCSimRootCherenkovHit+;
 #pragma link C++ class WCSimRootCherenkovHitTime+;
@@ -18,5 +21,6 @@
 #pragma link C++ class RooTrackerVtxBase+;
 #pragma link C++ class JNuBeamFlux+;
 #pragma link C++ class NRooTrackerVtx+;
+#pragma link C++ class WCSimEnumerations+;
 
 #endif

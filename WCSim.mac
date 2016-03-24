@@ -21,20 +21,12 @@
 #/WCSim/WCgeom Cylinder_60x74_20inchBandL_14perCent # Note: the actual coverage is 13.51%
 #/WCSim/WCgeom Cylinder_60x74_20inchBandL_40perCent
 
-# Generic cylindrical detector with a height of 100m and a
+# Generic cylindrical detector with a height of 100m and a 
 # diameter of 69m with 12" HPD and 14.59% photocoverage
 #/WCSim/WCgeom Cylinder_12inchHPD_15perCent # Note: the actual coverage is 14.59%
 
-#/WCSim/WCgeom HyperK #default length is 49500 mm unless changed below.
-
-#Added for detector length option (ONLY FOR HYPER-K GEOMETRY!!) 2014/07/29. This simulates a segment of the Hyper-K detector of a given length. 
-
-#/WCSim/HyperK/waterTank_Length 49500. mm # Equivalent length for 5 partitions(ie. will simulate a detector 1/10 of the HK length)
-
-#/WCSim/HyperK/waterTank_Length 61875. mm # Equivalent length for 4 partitions
-#/WCSim/HyperK/waterTank_Length 82500. mm # Equivalent length for 3 partitions
-#/WCSim/HyperK/waterTank_Length 123750. mm # Equivalent length for 2 partitions
-#/WCSim/HyperK/waterTank_Length 247500. mm # Equivalent length for 1 partition
+#/WCSim/WCgeom HyperK #default length is 49500 mm unless changed in /WCSim/HK/waterTankLength below.
+#/WCSim/WCgeom HyperK_withHPD #default length is 49500 mm unless changed in /WCSim/HK/waterTankLength below.
 
 #Changes the length of the simulated volume. Is currently only set up for HyperK. 
 #/WCSim/HyperK/waterTank_Length 24750. mm # Equivalent length for 10 partitions
@@ -44,18 +36,9 @@
 #/WCSim/HyperK/waterTank_Length 123750. mm # Equivalent length for 2 partitions
 #/WCSim/HyperK/waterTank_Length 247500. mm # Equivalent length for 1 partition
 
-/WCSim/WCgeom nuPRISM
-#Select which PMT to use
-/WCSim/nuPRISM/SetPMTType PMT8inch
-/WCSim/nuPRISM/SetPMTPercentCoverage 20
-#Set height of nuPRISM inner detector
-/WCSim/nuPRISM/SetDetectorHeight 10. m
-#Set vertical position of inner detector, in beam coordinates
-/WCSim/nuPRISM/SetDetectorVerticalPosition -10. m
-#Set diameter of inner detector
-/WCSim/nuPRISM/SetDetectorDiameter 6. m
-/WCSim/nuPRISM/Update
-/WCSim/Construct
+
+#/WCSim/Construct # This must be uncommented in order to construct a new detector configuration. 
+
 
 #Added for the PMT QE option 08/17/10 (XQ)
 # 1. Stacking only mean when the photon is generated
@@ -71,57 +54,11 @@
 #/WCSim/PMTQEMethod     Stacking_And_SensitiveDetector
 #/WCSim/PMTQEMethod     SensitiveDetector_Only
 
-# turn on or off the collection efficiency
+#turn on or off the collection efficiency
 /WCSim/PMTCollEff on
 
-#/WCSim/Construct # This must be uncommented to construct a new detector configuration.
-
 # command to choose save or not save the pi0 info 07/03/10 (XQ)
-#/WCSim/SavePi0 true
-/WCSim/SavePi0 false
-
-# command to set dark noise frequency 13/06/09
-# default dark noise frequency is 0 kHz
-/DarkRate/SetDarkRate 4.2 kHz #This is the value for SKI set in SKDETSIM.
-#/DarkRate/SetDarkRate 8.4 kHz #For 20 inch HPDs and Box and Line PMTs, based on High QE 20" R3600 dark rate from EGADS nov 2014
-#/DarkRate/SetDarkRate 3.0 kHz #For 12 inch HPDs and Box and Line PMTs, based on High QE 20" R3600 dark rate from EGADS nov 2014
-
-# command to multiply the dark rate.
-# Convert dark noise frequency before digitization to after digitization by setting suitable factor
-# (14/03/10)
-# Factor of Normal PMT is 1.367
-/DarkRate/SetConvert 1.367
-#/DarkRate/SetConvert 1.119 #For HPDs
-#/DarkRate/SetConvert 1.126 #For Box and Line PMTs
-
-/vis/scene/create
-/vis/open DAWNFILE
-# You can also set the size and position of the window if you like
-#/vis/open OGLSX 1000x1000-0+0
-#/vis/ogl/set/printSize 1000 1000
-
-# Vis Settings for SK
-/vis/viewer/zoom 1.2
-#/vis/viewer/set/viewpointThetaPhi 45 45 deg
-/vis/viewer/set/viewpointThetaPhi 110 0 deg
-/vis/viewer/set/upVector 0 0 1
-
-# Vis settings for HK
-#/vis/viewer/set/upVector 0 1 0
-#/vis/viewer/set/viewpointThetaPhi 50 165 deg
-#/vis/viewer/zoom 1.6
-#/vis/ogl/set/printMode pixmap
-#/vis/ogl/printEPS
-
-#/vis/open RayTracer
-#/vis/viewer/set/upVector 0 0 1
-#/vis/rayTracer/eyePosition 70 0 70
-#/vis/rayTracer/trace
-
-
-/vis/scene/add/hits
-/vis/scene/add/trajectories
-/vis/scene/endOfEventAction accumulate
+/WCSim/SavePi0 true
 
 ## select the input nuance-formatted vector file
 ## you can of course use your own
@@ -132,30 +69,57 @@
 #/mygen/vecfile h2o.2km.001-009x3_G4.kin
 #/mygen/vecfile mu+.out
 
-# command to set dark noise frequency 13/06/09
-# default dark noise frequency is 0 kHz
+
+#choose the Trigger & Digitizer type (and options)
+/DAQ/Digitizer SKI
+/DAQ/Trigger NDigits
+
+#grab the other DAQ options (thresholds, timing windows, etc.)
+/control/execute daq.mac
+
+
+# default dark noise frequency (and conversion factor) is PMT property (NEW), set in the code.
+# Below gives possibility to overwrite nominal values, eg. to switch OFF the Dark Noise.
 /DarkRate/SetDarkRate 4.2 kHz #This is the value for SKI set in SKDETSIM.
-#/DarkRate/SetDarkRate 8.4 kHz #For HPDs, based on High QE dark rate from EGADS nov 2014
+#/DarkRate/SetDarkRate 8.4 kHz #For 20 inch HPDs and Box and Line PMTs, based on High QE 20" R3600 dark rate from EGADS nov 2014
+#/DarkRate/SetDarkRate 3.0 kHz #For 12 inch HPDs and Box and Line PMTs, based on High QE 20" R3600 dark rate from EGADS nov 2014
 
 # command to multiply the dark rate.
 # Convert dark noise frequency before digitization to after digitization by setting suitable factor
-# (14/03/10)
-# Factor of Normal PMT is 1.367
-/DarkRate/SetConvert 1.367
-#/DarkRate/SetConvert 1.120 #For HPDs
+/DarkRate/SetConvert 1.367  #For Normal PMT
+#/DarkRate/SetConvert 1.119 #For HPDs
+#/DarkRate/SetConvert 1.126 #For Box and Line PMTs
 
-#/gun/particle mu- 
+# Select which time window(s) to add dark noise to
+#/DarkRate/SetDarkMode 0 to add dark noise to a time window starting at
+#/DarkRate/SetDarkLow to /DarkRate/SetDarkHigh [time in ns]
+#/DarkRate/SetDarkMode 1 adds dark noise hits to a window of
+#width /DarkRate/SetDarkWindow [time in ns] around each hit
+#i.e. hit time ± (/DarkRate/SetDarkWindow) / 2
+/DarkRate/SetDarkMode 1
+/DarkRate/SetDarkHigh 100000
+/DarkRate/SetDarkLow 0
+/DarkRate/SetDarkWindow 4000
+
+#Uncomment one of the lines below if you want to use the OGLSX or RayTracer visualizer
+#/control/execute visOGLSX.mac
+#/control/execute visRayTracer.mac
+
+
+# Or you can use the G4 Particle Gun
+/mygen/generator normal
+/gun/particle e-
 #/gun/particle pi0
 #/gun/energy 500 MeV
 #/gun/direction 0 0 1 
 #/gun/position 0 0 0  
 
 ## change the name of the output root file, default = wcsim.root
-/WCSimIO/RootFile wcsim_TestNEUT.root
+/WCSimIO/RootFile wcsim_output.root
 
 ## Boolean to select whether to save the NEUT RooTracker vertices in the output file, provided you used
 ## a NEUT vector file as input
 /WCSimIO/SaveRooTracker 1
 
-/run/beamOn 1
+/run/beamOn 10
 #exit
