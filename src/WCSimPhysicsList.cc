@@ -67,9 +67,9 @@ void WCSimPhysicsList::ConstructProcess()
   //AddTransportation();
   ConstructEM();
   ConstructlArStepLimiter();
-  ConstructGeneral();
+//  ConstructGeneral(); // Turn off decays for tuning - want single-ring events
   ConstructOp();
-  ConstructHad();
+//  ConstructHad(); // Turn off hadronic interactions for tuning - want single-ring events
 }
 
 
@@ -185,13 +185,13 @@ void WCSimPhysicsList::ConstructEM()
       pmanager->SetProcessOrdering(aPairProduction,     idxPostStep,4);
 
       // MF , stolen from CWW, april 2005
-      if (particleName == "mu-")
-        {
-          G4VProcess* aG4MuonMinusCaptureAtRest =
-            new G4MuonMinusCaptureAtRest();
-          pmanager->AddProcess(aG4MuonMinusCaptureAtRest);
-          pmanager->SetProcessOrdering(aG4MuonMinusCaptureAtRest,idxAtRest);
-        }
+//      if (particleName == "mu-") // Remove capture at rest for tuning -- this process also decays muons and we want single-ring events
+//        {
+//          G4VProcess* aG4MuonMinusCaptureAtRest =
+//            new G4MuonMinusCaptureAtRest();
+//          pmanager->AddProcess(aG4MuonMinusCaptureAtRest);
+//          pmanager->SetProcessOrdering(aG4MuonMinusCaptureAtRest,idxAtRest);
+//        }
 
 
     } else if ((!particle->IsShortLived()) &&
