@@ -94,6 +94,8 @@ public:
   G4float  GetmaxQE();
   float    HitTimeSmearing(float);
   G4double GetPMTGlassThickness();
+  G4float  GetDarkRate();
+  G4float  GetDarkRateConversionFactor();
 };
 
  class PMT10inch : public WCSimPMTObject
