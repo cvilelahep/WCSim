@@ -551,6 +551,17 @@ G4float* PMT5inch::GetQEWavelength(){static G4float wavelength[20] = { 280., 300
 G4float  PMT5inch::GetmaxQE(){
     const G4float maxQE = 0.211;
   return maxQE;
+ 
+G4float PMT5inch::GetDarkRate(){
+    const G4float rate = 4.2*CLHEP::kilohertz;   //SKI value set in SKDETSim. 
+  return rate;
+}
+
+G4float PMT5inch::GetDarkRateConversionFactor(){
+  const G4float factor = 1.367;
+  return factor;
+}
+    
 }
 
 
