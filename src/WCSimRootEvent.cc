@@ -99,10 +99,10 @@ void WCSimRootTrigger::Initialize() //actually allocate memory for things in her
   // TClonesArray of WCSimRootCherenkovHits
   fCherenkovHits = new TClonesArray("WCSimRootCherenkovHit", 
 				    10000);
-  fCherenkovHitTimes = new TClonesArray("WCSimRootCherenkovHitTime", 
-					10000);
+  //  fCherenkovHitTimes = new TClonesArray("WCSimRootCherenkovHitTime", 
+  //					10000);
   fCherenkovHits->BypassStreamer(kFALSE); // use the member Streamer
-  fCherenkovHitTimes->BypassStreamer(kFALSE); // use the member Streamer
+  //  fCherenkovHitTimes->BypassStreamer(kFALSE); // use the member Streamer
   fNcherenkovhits = 0;
   fNcherenkovhittimes = 0;
 
@@ -140,12 +140,12 @@ WCSimRootTrigger::~WCSimRootTrigger()
 
     fTracks->Delete();            
     fCherenkovHits->Delete();      
-    fCherenkovHitTimes->Delete();   
+    //    fCherenkovHitTimes->Delete();   
     fCherenkovDigiHits->Delete();  
     
     delete   fTracks;            
     delete   fCherenkovHits;      
-    delete   fCherenkovHitTimes;   
+    //    delete   fCherenkovHitTimes;   
     delete   fCherenkovDigiHits; 
   }
   mystopw->Stop();
@@ -185,8 +185,8 @@ WCSimRootTrigger & WCSimRootTrigger::operator=(const WCSimRootTrigger & in)
   fNcherenkovhits = in.fNcherenkovhits;
   fCherenkovHits = (TClonesArray*)in.fCherenkovHits->Clone();
   fCherenkovHitCounter = in.fCherenkovHitCounter;
-  fNcherenkovhittimes = in.fNcherenkovhittimes;
-  fCherenkovHitTimes = (TClonesArray*)in.fCherenkovHitTimes->Clone();
+  //  fNcherenkovhittimes = in.fNcherenkovhittimes;
+  //  fCherenkovHitTimes = (TClonesArray*)in.fCherenkovHitTimes->Clone();
   fNumDigitizedTubes = in.fNumDigitizedTubes;
   fNcherenkovdigihits = in.fNcherenkovdigihits;
   fSumQ = in.fSumQ;
@@ -208,7 +208,7 @@ void WCSimRootTrigger::Clear(Option_t */*option*/)
 
   // TClonesArray of WCSimRootCherenkovHits
   fNcherenkovhits = 0;
-  fNcherenkovhittimes = 0;
+  //  fNcherenkovhittimes = 0;
 
   // TClonesArray of WCSimRootCherenkovDigiHits
   fNcherenkovdigihits = 0;
@@ -220,7 +220,7 @@ void WCSimRootTrigger::Clear(Option_t */*option*/)
 
   fTracks->Delete();
   fCherenkovHits->Delete();
-  fCherenkovHitTimes->Delete();
+  //  fCherenkovHitTimes->Delete();
   fCherenkovDigiHits->Delete();
 
   fTriggerType = kTriggerUndefined;
@@ -423,20 +423,21 @@ WCSimRootTrack::WCSimRootTrack(Int_t ipnu,
 WCSimRootCherenkovHit *WCSimRootTrigger::AddCherenkovHit(Int_t tubeID,std::vector<Float_t> truetime,std::vector<Int_t> primParID)
 {
   // Add a new Cherenkov hit to the list of Cherenkov hits
-  TClonesArray &cherenkovhittimes = *fCherenkovHitTimes;
+  //  TClonesArray &cherenkovhittimes = *fCherenkovHitTimes;
 
-  for (unsigned int i =0;i<truetime.size();i++)
-  {
-    fCherenkovHitCounter++;
+  //  for (unsigned int i =0;i<truetime.size();i++)
+  //  {
+  //    fCherenkovHitCounter++;
 
-    WCSimRootCherenkovHitTime *cherenkovhittime = 
-      new(cherenkovhittimes[fNcherenkovhittimes++]) WCSimRootCherenkovHitTime(truetime[i],primParID[i]);
-  }
+  //    WCSimRootCherenkovHitTime *cherenkovhittime = 
+  //      new(cherenkovhittimes[fNcherenkovhittimes++]) WCSimRootCherenkovHitTime(truetime[i],primParID[i]);
+  //  }
 
   Int_t WC_Index[2];
-  WC_Index[0] = fNcherenkovhittimes-truetime.size(); //fCherenkovHitCounter-truetime.size();
-  WC_Index[1] = truetime.size();
-
+  //  WC_Index[0] = fNcherenkovhittimes-truetime.size(); //fCherenkovHitCounter-truetime.size();
+  //  WC_Index[1] = truetime.size();
+  
+  
   TClonesArray &cherenkovhits = *fCherenkovHits;
  
   WCSimRootCherenkovHit *cherenkovhit
